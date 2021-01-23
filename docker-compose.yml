@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  crud-service:
+    image: crud-service
+    container_name: crud-service
+    build: ./
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    links:
+      - mongo
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+    env_file: .env
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+      - "28017:28017"
+    environment:
+      - AUTH=no
+    volumes:
+      - "./mongo/db:/data/db"
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
